@@ -195,10 +195,12 @@ func (r *Resolver) load(key string) (rrs []string, err error, found bool) {
 
 func (r *Resolver) storeLocked(key string, rrs []string, used bool, err error) {
 	if entry, found := r.cache[key]; found {
-		// Update existing entry in place
-		entry.rrs = rrs
-		entry.err = err
-		entry.used = used
+		// Update existing entry in place if no error
+		if err == nil {
+			entry.rrs = rrs
+			entry.err = err
+			entry.used = used
+		}
 		return
 	}
 	r.cache[key] = &cacheEntry{
